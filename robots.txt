@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /design-review/
+
+Sitemap: https://ta1man-404.github.io/frutoezhka/sitemap.xml
