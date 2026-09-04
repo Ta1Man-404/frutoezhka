@@ -618,7 +618,7 @@
         border-radius: inherit;
 
         &.is-running {
-            transition: width var(--tick-duration, 7.5s) linear;
+            transition: width var(--tick-duration, 5s) linear;
         }
     }
 }
@@ -648,15 +648,19 @@
         }
     }
 
+    // Task 15: карусель компактнее (была рассчитана на всю ширину секции,
+    // теперь делит .explorer-left с фронтальным снимком) — целевая ширина
+    // пункта и размеры кружка уменьшены, пропорции между --active/--dist
+    // сохранены.
     &-item {
-        flex: 0 0 var(--item-step, 130px);
+        flex: 0 0 var(--item-step, 100px);
         background: none;
         border: none;
         color: inherit;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         padding: 6px 0;
         cursor: pointer;
         opacity: calc(1 - min(var(--dist, 0), 4) * .2);
@@ -666,12 +670,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 58px;
-            height: 58px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             background: var(--cream);
             box-shadow: 0 8px 16px -8px rgba(0, 0, 0, .5);
-            padding: 13px;
+            padding: 10px;
             transition: width .3s ease, height .3s ease, box-shadow .3s ease;
 
             img {
@@ -682,7 +686,7 @@
         }
 
         span {
-            font-size: .72rem;
+            font-size: .68rem;
             font-weight: 700;
             color: rgba(251, 241, 226, .75);
             text-align: center;
@@ -692,8 +696,8 @@
 
         &.is-active {
             i {
-                width: 78px;
-                height: 78px;
+                width: 62px;
+                height: 62px;
                 box-shadow: 0 0 0 3px var(--apricot), 0 12px 26px -10px rgba(0, 0, 0, .65);
             }
 
@@ -727,123 +731,87 @@
     }
 }
 
-/* ===== collage =====
-   fixed px tracks per breakpoint instead of fr/vw/clamp — a fluid track can
-   land at an awkward in-between width where a card/photo looks squeezed;
-   a concrete value per tier never does */
-.collage {
+/* ===== explorer-split: «разворот» (Task 15) =====
+   Двухколоночная сетка вместо коллажа из трёх ракурсов: слева заголовок +
+   фронтальный снимок + карусель выбора вкуса, справа — слайдер
+   атмосферных фото во всю высоту колонки. Фиксированный px-трек по той же
+   причине, что раньше был у .collage — конкретное значение на каждый
+   брейкпоинт не даёт раскладке зависать в неудобной промежуточной ширине. */
+.explorer-split {
     display: grid;
-    grid-template-columns: 700px 322px;
-    grid-template-rows: 251px 251px;
-    gap: 18px;
-    max-width: 1040px;
-    height: 520px;
+    grid-template-columns: 620px 1fr;
+    gap: 32px;
+    align-items: stretch;
+    max-width: 1200px;
     margin: 0 auto;
+    text-align: center;
 }
 
-.collage-slot {
+.explorer-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.flavor-frame {
     position: relative;
-    border: none;
-    padding: 0;
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 1;
+    margin: 14px auto 0;
     border-radius: 18px;
     overflow: hidden;
-    /* fallback paint before JS sets each slot's own analysed background
-       (mockup-v3.js fillSlot) — matches the overwhelming majority case */
+    /* fallback paint before JS sets the flavor's own analysed background
+       (catalog.js renderFront) — matches the overwhelming majority case */
     background: #fff;
     box-shadow: inset 0 0 0 1px rgba(251, 241, 226, .16);
-
-    &--big {
-        grid-row: 1 / 3;
-        grid-column: 1;
-        cursor: default;
-
-        &[data-key="open"] img {
-            object-fit: cover;
-            padding: 0;
-        }
-    }
-
-    &--small {
-        cursor: pointer;
-
-        &:hover {
-            box-shadow: inset 0 0 0 2px var(--apricot);
-        }
-
-        &[data-key="open"] img {
-            object-fit: contain;
-            padding: 2%;
-        }
-    }
 
     img {
         width: 100%;
         height: 100%;
         object-fit: contain;
         object-position: center;
-        padding: 6%;
-    }
-
-    &[data-key="side"] img {
-        /* side photos vary in aspect ratio and in exact off-white tone —
-           cover fills the slot edge-to-edge so no letterboxed strip of the
-           photo's own (sometimes slightly grey) background is ever exposed
-           next to the slot's pure white, in either the big or small state */
-        object-fit: cover;
-        padding: 0;
-    }
-
-    &.is-placeholder {
-        .collage-placeholder {
-            display: flex;
-        }
-
-        img {
-            display: none;
-        }
-    }
-
-    &.is-swapping {
-        @media (prefers-reduced-motion: no-preference) {
-            animation: collageSwap .35s ease;
-        }
+        padding: 8%;
     }
 }
 
-@keyframes collageSwap {
-    0% { opacity: .35; transform: scale(.96); }
-    100% { opacity: 1; transform: scale(1); }
+.explorer-right {
+    position: relative;
+    min-height: 480px;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(251, 241, 226, .16);
 }
 
-.collage-placeholder {
+/* ===== atmo-slider: слайдер атмосферных фото, кроссфейд по таймеру =====
+   position:absolute + inset:0 на каждом кадре — раскладке не от чего
+   скакать, размер задаёт .explorer-right. Живёт независимо от viewport.js
+   и заморозки при зуме (Ruling 51): свой таймер, своя пауза по
+   IntersectionObserver. */
+.atmo-slider {
     position: absolute;
     inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: .74rem;
-    color: rgba(251, 241, 226, .75);
-    /* own opaque dark base — must stay legible regardless of the slot's own
-       background (white for real photos, transparent-dark for the cutout) */
-    background:
-        repeating-linear-gradient(135deg, rgba(0, 0, 0, .08) 0 10px, rgba(0, 0, 0, .16) 10px 20px),
-        #2c1f13;
-    padding: 10px;
 }
 
-.collage-label {
+.atmo-slide {
     position: absolute;
-    left: 10px;
-    bottom: 10px;
-    z-index: 1;
-    background: rgba(20, 10, 5, .6);
-    color: var(--cream);
-    font-size: .68rem;
-    font-weight: 700;
-    padding: 5px 11px;
-    border-radius: 100px;
-    backdrop-filter: blur(2px);
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity .8s cubic-bezier(.65, 0, .35, 1);
+
+    &.is-active {
+        opacity: 1;
+        z-index: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .atmo-slide {
+        transition: none;
+    }
 }
 
 // #top.hero переехал в hero.scss (Ruling 10, Task 11) — секция «hero»,

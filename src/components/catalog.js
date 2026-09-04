@@ -3,28 +3,40 @@
 //------ Каталог вкусов: карусели и пинned-скролл ------\\
 
 // ---- данные вкусов ----
+// Task 15: ракурсы side/open ушли целиком (владелец выбрал макет
+// «Разворот» — один фронтальный снимок + слайдер атмосферных фото),
+// имена сокращены — яблочная основа названа один раз в подписи секции.
 const CLASSIC = [
-    {icon: 'icon-apple.svg', name: 'Яблоко', front: 'yabloko.jpg', side: 'yabloko-side.jpg', open: 'yabloko-open.png'},
-    {icon: 'icon-blueberry.svg', name: 'Яблоко + черника', front: 'chernika.jpg', side: 'chernika-side.jpg', open: 'abrikos-open.png'},
-    {icon: 'icon-pumpkin.svg', name: 'Яблоко + тыква', front: 'tikva.jpg', side: 'tikva-side.jpg', open: 'tikva-open.png'},
-    {icon: 'icon-pear.svg', name: 'Яблоко + груша', front: 'grusha.jpg', side: 'grusha-side.jpg', open: 'yabloko-open.png'},
-    {icon: 'icon-pineapple.svg', name: 'Яблоко + ананас', front: 'ananas.jpg', side: 'ananas-side.jpg', open: 'ananas-open.png'},
-    {icon: 'icon-orange.svg', name: 'Яблоко + апельсин', front: 'apelsin.jpg', side: 'apelsin-side.jpg', open: 'apelsin-open.png'},
-    {icon: 'icon-apricot.svg', name: 'Яблоко + абрикос', front: 'abrikos.jpg', side: 'abrikos-side.jpg', open: 'abrikos-open.png'},
-    {icon: 'icon-banana.svg', name: 'Яблоко + банан', front: 'banan.jpg', side: 'banan-side.jpg', open: 'banan-open.png'},
-    {icon: 'icon-melon.svg', name: 'Яблоко + дыня', front: 'dinya.jpg', side: 'dinya-side.jpg', open: 'dinya-open.png'},
-    {icon: 'icon-barberry.svg', name: 'Яблоко + барбарис', front: 'barbaris.jpg', side: 'barbaris-side.jpg', open: 'barbaris-open.png'},
-    {icon: 'icon-cherry.svg', name: 'Яблоко + вишня', front: 'vishnya.jpg', side: 'vishnya-side.jpg', open: 'vishnya-open.png'}
+    {icon: 'icon-apple.svg', name: 'Яблоко', front: 'yabloko.jpg'},
+    {icon: 'icon-blueberry.svg', name: 'Черника', front: 'chernika.jpg'},
+    {icon: 'icon-pumpkin.svg', name: 'Тыква', front: 'tikva.jpg'},
+    {icon: 'icon-pear.svg', name: 'Груша', front: 'grusha.jpg'},
+    {icon: 'icon-pineapple.svg', name: 'Ананас', front: 'ananas.jpg'},
+    {icon: 'icon-orange.svg', name: 'Апельсин', front: 'apelsin.jpg'},
+    {icon: 'icon-apricot.svg', name: 'Абрикос', front: 'abrikos.jpg'},
+    {icon: 'icon-banana.svg', name: 'Банан', front: 'banan.jpg'},
+    {icon: 'icon-melon.svg', name: 'Дыня', front: 'dinya.jpg'},
+    {icon: 'icon-barberry.svg', name: 'Барбарис', front: 'barbaris.jpg'},
+    {icon: 'icon-cherry.svg', name: 'Вишня', front: 'vishnya.jpg'}
 ];
 
 const SPECIAL = [
-    {icon: 'icon-apple.svg', name: 'Яблоко (длинная)', front: 'long-apple.jpg', side: 'long-apple-side.jpg', open: 'long-apple-open.png', frontBg: 'linear-gradient(135deg, #fbfbfd 0%, #f0f0f4 100%)'},
-    {icon: 'icon-plum.svg', name: 'Слива', front: 'long-plum.jpg', side: 'long-plum-side.jpg', open: 'long-plum-open.png'},
-    {icon: 'icon-cherry.svg', name: 'Вишня', front: 'long-cherry.jpg', side: 'long-cherry-side.jpg', open: 'long-cherry-open.png'},
-    {icon: 'icon-mango.svg', name: 'Манго', front: 'long-mango.jpg', side: 'long-mango-side.jpg', open: 'long-mango-open.png'},
-    {icon: 'icon-strawberry.svg', name: 'Клубника', front: 'long-strawberry.jpg', side: 'long-strawberry-side.jpg', open: 'long-strawberry-open.png', frontBg: 'linear-gradient(135deg, #ffffff 0%, #eeeeee 100%)'},
-    {icon: 'icon-apricot.svg', name: 'Абрикос', front: 'long-apricot.jpg', side: 'long-apricot-side.jpg', open: 'long-apricot-open.png'},
-    {icon: 'icon-raspberry.svg', name: 'Малина', front: 'long-raspberry.jpg', side: 'long-raspberry-side.jpg', open: 'long-raspberry-open.png'}
+    {icon: 'icon-apple.svg', name: 'Яблоко', front: 'long-apple.jpg', frontBg: 'linear-gradient(135deg, #fbfbfd 0%, #f0f0f4 100%)'},
+    {icon: 'icon-plum.svg', name: 'Слива', front: 'long-plum.jpg'},
+    {icon: 'icon-cherry.svg', name: 'Вишня', front: 'long-cherry.jpg'},
+    {icon: 'icon-mango.svg', name: 'Манго', front: 'long-mango.jpg'},
+    {icon: 'icon-strawberry.svg', name: 'Клубника', front: 'long-strawberry.jpg', frontBg: 'linear-gradient(135deg, #ffffff 0%, #eeeeee 100%)'},
+    {icon: 'icon-apricot.svg', name: 'Абрикос', front: 'long-apricot.jpg'},
+    {icon: 'icon-raspberry.svg', name: 'Малина', front: 'long-raspberry.jpg'}
+];
+
+// ---- атмосферные фото слайдера (общие для classic и special — один и
+// тот же набор, браузер переиспользует уже загруженные файлы) ----
+const ATMO_PHOTOS = [
+    {file: 'atmo-1.jpg', alt: 'Фрукты, шоколад и упаковки пастилы крупным планом'},
+    {file: 'atmo-2.jpg', alt: 'Крафтовые кульки с пастилой'},
+    {file: 'atmo-3.jpg', alt: 'Коробка «Пастила фруктовая» с россыпью пастилок'},
+    {file: 'atmo-4.jpg', alt: 'Плотная россыпь разноцветных упаковок пастилы'}
 ];
 
 const BG_LAYOUT = [
@@ -39,8 +51,6 @@ const BG_LAYOUT = [
     {top: '50%', left: '92%', size: 65, rot: 20},
     {top: '10%', left: '64%', size: 95, rot: -10}
 ];
-
-const LABELS = {front: 'Упаковка спереди', side: 'Упаковка сбоку', open: 'Пастила без упаковки'};
 
 export class Catalog {
     constructor(viewport) {
@@ -70,15 +80,11 @@ export class Catalog {
         const toggleInput = section.querySelector('.autoplay-checkbox');
         const toggleLabel = section.querySelector('.autoplay-toggle');
         const bgLayer = section.querySelector('.explorer-bg');
-        const slots = {
-            front: section.querySelector('.collage-slot[data-key="front"]'),
-            side: section.querySelector('.collage-slot[data-key="side"]'),
-            open: section.querySelector('.collage-slot[data-key="open"]')
-        };
+        const frontFrame = section.querySelector('.flavor-frame');
+        const frontImg = frontFrame ? frontFrame.querySelector('img') : null;
         const n = flavors.length;
         const tripled = flavors.concat(flavors).concat(flavors);
         let current = n; // start in middle copy
-        let bigKey = 'front'; // which of front/side/open is currently the big photo
 
         tripled.forEach((f, i) => {
             const btn = document.createElement('button');
@@ -109,7 +115,7 @@ export class Catalog {
         // the selected flavor then always lands exactly in the middle
         function layoutCarousel() {
             const vw = viewport.getBoundingClientRect().width;
-            const target = 130;
+            const target = 100; // Task 15: карусель компактнее — делит место с фронтальным снимком
             let count = Math.max(1, Math.round(vw / target));
             if (count % 2 === 0) count -= 1;
             const step = vw / count;
@@ -137,55 +143,14 @@ export class Catalog {
             });
         }
 
-        function fillSlot(key, flavor) {
-            const slotEl = slots[key];
-            const img = slotEl.querySelector('img');
-            const label = slotEl.querySelector('.collage-label');
-            const hasPhoto = !!flavor[key];
-            slotEl.classList.toggle('is-placeholder', !hasPhoto);
-            if (hasPhoto) {
-                img.src = 'dist/static/images/' + flavor[key];
-                img.alt = flavor.name + ' — ' + LABELS[key].toLowerCase();
-            }
-            // each photo's own studio backdrop, analysed per file — flat white
-            // unless that specific shot actually has a soft gradient (front only,
-            // a handful of "особый формат" photos); "без упаковки" is a cutout
-            // with no backdrop of its own, so it always gets plain white
-            const bg = key === 'front' ? (flavor.frontBg || '#fff')
-                : key === 'side' ? (flavor.sideBg || '#fff')
-                    : '#fff';
-            slotEl.style.background = bg;
-            label.textContent = LABELS[key];
-        }
-
-        function renderCollage(flavor) {
-            fillSlot('front', flavor);
-            fillSlot('side', flavor);
-            fillSlot('open', flavor);
-            applyBigKey(false);
-        }
-
-        // CSS grid places the explicitly-positioned `--big` slot first, then flows
-        // the remaining two `--small` slots into the leftover cells in DOM order —
-        // so only one variable (which key is big) needs tracking, not full order.
-        function applyBigKey(animate) {
-            Object.keys(slots).forEach((key) => {
-                const el = slots[key];
-                const isBig = key === bigKey;
-                el.classList.toggle('collage-slot--big', isBig);
-                el.classList.toggle('collage-slot--small', !isBig);
-                if (animate && !reduceMotion) {
-                    el.classList.remove('is-swapping');
-                    void el.offsetWidth;
-                    el.classList.add('is-swapping');
-                }
-            });
-        }
-
-        function setBig(key) {
-            if (key === bigKey) return;
-            bigKey = key;
-            applyBigKey(true);
+        // единственный фронтальный снимок вкуса — коллаж из трёх ракурсов
+        // (Task 15) ушёл вместе с side/open; фон снимка по-прежнему берётся
+        // с конкретного вкуса, если задан свой градиент, иначе — белый
+        function renderFront(flavor) {
+            if (!frontImg) return;
+            frontImg.src = 'dist/static/images/' + flavor.front;
+            frontImg.alt = flavor.name + ' — упаковка пастилы';
+            frontFrame.style.background = flavor.frontBg || '#fff';
         }
 
         function currentFlavor() {
@@ -196,9 +161,8 @@ export class Catalog {
             current = newIndex;
             updateActiveClasses();
             center(current, !(opts && opts.silent));
-            bigKey = 'front';
             const f = currentFlavor();
-            renderCollage(f);
+            renderFront(f);
             if (announce) announce.textContent = f.name;
         }
 
@@ -219,14 +183,13 @@ export class Catalog {
             if (e.key === 'ArrowRight') { stopAutoplayUI(); goTo(current + 1); }
         });
 
-        Object.keys(slots).forEach((key) => {
-            slots[key].addEventListener('click', () => { stopAutoplayUI(); setBig(key); });
-        });
-
-        // ---- autoplay: cycles which collage photo is big, then advances flavor ----
-        const AUTOPLAY_STEP_MS = 7500; // было 2500 — слишком быстро, +5 сек по просьбе
+        // ---- autoplay: листает вкусы с шагом 5с (Ruling 53, правка владельца) ----
+        // раньше тумблер перебирал ракурсы одного вкуса (front/side/open), а
+        // потом переходил к следующему; ракурсов больше нет, так что тик
+        // теперь просто продвигает карусель на один вкус. Было 7.5с (Task 15,
+        // первая версия), владелец попросил вернуть 5с уже по ходу работы.
+        const AUTOPLAY_STEP_MS = 5000;
         let autoplayTimer = null;
-        let autoplayStep = 0;
         const progressBar = section.querySelector('.autoplay-progress-bar');
         const progressWrap = section.querySelector('.autoplay-progress');
         if (progressWrap) progressWrap.style.setProperty('--tick-duration', (AUTOPLAY_STEP_MS / 1000) + 's');
@@ -241,18 +204,12 @@ export class Catalog {
         }
 
         function autoplayTick() {
-            autoplayStep = (autoplayStep + 1) % 3;
-            if (autoplayStep === 0) {
-                goTo(current + 1);
-            } else {
-                setBig(['front', 'side', 'open'][autoplayStep]);
-            }
+            goTo(current + 1);
             resetProgress();
         }
 
         function startAutoplay() {
             stopAutoplayTimer();
-            autoplayStep = 0;
             autoplayTimer = setInterval(autoplayTick, AUTOPLAY_STEP_MS);
             if (progressWrap) progressWrap.hidden = false;
             resetProgress();
@@ -307,6 +264,61 @@ export class Catalog {
         layoutCarousel();
         goTo(current, {silent: true});
         center(current, false);
+
+        this.initAtmoSlider(section);
+    }
+
+    //------ Слайдер атмосферных фото (правая колонка «разворота») ------\\
+    // Живёт на собственном таймере, не на скролле: viewport.js и заморозка
+    // при зуме его не касаются (Ruling 51) — только пауза по
+    // IntersectionObserver, когда секция не видна, и полное отключение
+    // автопрокрутки при prefers-reduced-motion.
+    initAtmoSlider(section) {
+        const track = section.querySelector('.atmo-slider');
+        if (!track) return;
+        const slides = Array.prototype.slice.call(track.querySelectorAll('.atmo-slide'));
+        if (!slides.length) return;
+
+        const STEP_MS = 4000;
+        let index = 0;
+        let timer = null;
+
+        function show(i) {
+            index = i;
+            slides.forEach((el, j) => el.classList.toggle('is-active', j === i));
+        }
+
+        function tick() {
+            show((index + 1) % slides.length);
+        }
+
+        const start = () => {
+            if (timer || this.reduceMotion || slides.length < 2) return;
+            timer = setInterval(tick, STEP_MS);
+        };
+
+        function stop() {
+            if (timer) { clearInterval(timer); timer = null; }
+        }
+
+        if (!this.reduceMotion && slides.length > 1) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) start();
+                    else stop();
+                });
+            }, {threshold: 0.1});
+            observer.observe(section);
+        }
+
+        show(0);
+
+        // тестовый хук: останавливает таймер и жёстко возвращает первый
+        // кадр без перехода — используется baseline.spec.js перед каждым
+        // скриншотом, тем же приёмом, каким уже заморожен кадр hero-видео
+        // (иначе таймер, крутящийся по 4с, замигает всю сеть эталонов).
+        window.__atmoSliders = window.__atmoSliders || [];
+        window.__atmoSliders.push({stop, freeze: () => { stop(); show(0); }});
     }
 
     //------ Пинned-скролл каталога: classic → title card → special ------\\

@@ -7,36 +7,60 @@
 //
 // .set-card/.set-card-featured на 1439px переехали в adaptive/sets.scss
 // вместе с самими классами (Ruling 10, Task 11; .set-card слился в
-// .sets-item). .collage уже был плоским селектором в базовом файле.
-// .collage-slot--big восстановлен на той же глубине (было .collage-slot {
-// &--big { @media {…} } }, специфичность одного класса .collage-slot--big
-// — как и у &--big).
+// .sets-item).
+//
+// Task 15: .collage/.collage-slot(--big/--small) на 1439/1023 ушли вместе
+// с самим коллажем — макет «Разворот» заменил их на .explorer-split;
+// брейкпоинты те же (1439, 1023), плюс новый ≤720, на котором колонки
+// складываются и слайдер уходит наверх узкой полосой (просьба владельца —
+// не съедать экран перед упаковкой на телефоне).
 
 @media (max-width: 1439px) {
-    .collage {
-        grid-template-columns: 580px 262px;
-        grid-template-rows: 231px 231px;
-        max-width: 860px;
-        height: 480px;
+    .explorer-split {
+        grid-template-columns: 460px 1fr;
+        gap: 24px;
+    }
+
+    .flavor-frame {
+        max-width: 280px;
+    }
+
+    .explorer-right {
+        min-height: 420px;
     }
 }
 
 @media (max-width: 1023px) {
-    .collage {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto;
-        gap: 14px;
-        max-width: 640px;
-        height: auto;
+    .explorer-split {
+        grid-template-columns: 360px 1fr;
+        gap: 18px;
     }
 
-    .collage-slot--big {
-        grid-column: 1 / 3;
-        grid-row: 1;
-        aspect-ratio: 16 / 10;
+    .flavor-frame {
+        max-width: 240px;
     }
 
-    .collage-slot--small {
-        aspect-ratio: 1 / 1;
+    .explorer-right {
+        min-height: 360px;
+    }
+}
+
+@media (max-width: 720px) {
+    .explorer-split {
+        display: flex;
+        flex-direction: column;
+    }
+
+    // слайдер — наверх, узкой полосой, чтобы не съедать экран перед
+    // каруселью и упаковкой
+    .explorer-right {
+        order: -1;
+        min-height: 0;
+        height: 34vw;
+        max-height: 200px;
+    }
+
+    .flavor-frame {
+        max-width: 220px;
     }
 }
