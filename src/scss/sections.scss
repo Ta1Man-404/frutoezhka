@@ -1,0 +1,311 @@
+// ===== sections.scss =====
+// Общие секции лендинга: обёртка секции, лента вкусов, процесс,
+// отзывы, блок покупки. Вложенность — от корня секции, не глубже 4 уровней.
+//
+// .flavor-line, .process-line, .process-step, .testi, .buy-grid оставлены
+// плоскими (без нового класса-предка): их перебивает общий медиа-запрос
+// в wholesale.scss (грузится последним). Оборачивание во вложенность
+// подняло бы им специфичность, и перебивающее правило перестало бы
+// работать на узких экранах — как и в hero.scss/catalog.scss.
+
+/* ===== generic section ===== */
+.section {
+    padding: clamp(40px, 5vw, 60px) clamp(20px, 4vw, 56px);
+}
+
+.section-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    margin-bottom: 28px;
+
+    h2 {
+        font-size: clamp(1.5rem, 2.4vw, 2rem);
+    }
+}
+
+.link-more {
+    font-weight: 800;
+    font-size: .85rem;
+    color: var(--coral-deep);
+}
+
+
+/* ===== flavor line (compact dotted timeline, per approved 1D layout) ===== */
+.flavor-line {
+    display: flex;
+    justify-content: center;
+    gap: 26px;
+    flex-wrap: wrap;
+    position: relative;
+    padding-top: 14px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 42px;
+        height: 1px;
+        background: var(--line);
+        z-index: 0;
+    }
+
+    .flavor-dot-item {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        width: 104px;
+        text-align: center;
+
+        i {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: var(--board);
+            box-shadow: 0 0 0 2px var(--cream), 0 8px 16px -8px rgba(44, 31, 19, .4);
+            padding: 13px;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+
+        span {
+            font-size: .76rem;
+            font-weight: 700;
+            color: var(--ink-soft);
+            line-height: 1.25;
+        }
+    }
+}
+
+
+/* ===== process (connected-circle timeline, per approved 1D layout) ===== */
+.process {
+    background: var(--board);
+
+    .link-more {
+        display: inline-block;
+        margin-top: 14px;
+    }
+}
+
+.process-line {
+    display: flex;
+    gap: 18px;
+    position: relative;
+    padding-top: 8px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 26px;
+        right: 26px;
+        top: 34px;
+        height: 1px;
+        background: var(--line);
+        z-index: 0;
+    }
+}
+
+.process-step {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    text-align: center;
+    padding: 0 8px;
+
+    .num {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        margin: 0 auto 16px;
+        border-radius: 50%;
+        background: var(--cream);
+        box-shadow: 0 0 0 1.5px var(--line);
+        font-family: 'Yeseva One', serif;
+        font-size: 1.2rem;
+        color: var(--coral-deep);
+    }
+
+    b {
+        display: block;
+        font-size: .92rem;
+        margin-bottom: 6px;
+    }
+
+    p {
+        font-size: .82rem;
+        color: var(--ink-soft);
+    }
+}
+
+.process-note {
+    margin-top: 28px;
+    font-size: .92rem;
+    color: var(--ink-soft);
+    max-width: 70ch;
+
+    b {
+        color: var(--ink);
+    }
+}
+
+
+/* ===== testimonials (staggered cards, per approved 1D layout) ===== */
+.testi-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    padding: 26px 0 10px;
+}
+
+.testi {
+    background: var(--cream);
+    border-radius: 16px;
+    padding: 22px;
+    width: 260px;
+    margin: 0 -14px;
+    box-shadow: var(--shadow);
+    position: relative;
+
+    &:nth-child(1) {
+        transform: rotate(-2deg) translateY(10px);
+        z-index: 1;
+    }
+
+    &:nth-child(2) {
+        transform: rotate(1deg) translateY(-8px);
+        z-index: 3;
+    }
+
+    &:nth-child(3) {
+        transform: rotate(-1deg) translateY(16px);
+        z-index: 2;
+    }
+
+    .stars {
+        color: var(--coral);
+        font-size: .8rem;
+        letter-spacing: .1em;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: .9rem;
+        font-style: italic;
+        color: var(--ink);
+    }
+
+    .who {
+        margin-top: 14px;
+        font-size: .8rem;
+        font-weight: 800;
+        color: var(--ink-soft);
+        font-style: normal;
+    }
+}
+
+
+/* ===== buy block (dark band, per approved 1D layout) ===== */
+.buy {
+    background: var(--coral-deep);
+    color: var(--cream);
+
+    .section-head h2, .link-more {
+        color: var(--cream);
+    }
+
+    .note {
+        color: #F3D3C8;
+        font-size: .85rem;
+        margin-top: -10px;
+        margin-bottom: 24px;
+        max-width: 60ch;
+
+        a {
+            text-decoration: underline;
+        }
+    }
+}
+
+.buy-grid {
+    display: grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap: 16px;
+    max-width: 620px;
+    margin: 0 auto;
+}
+
+.buy-card {
+    background: rgba(251, 241, 226, .08);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: inset 0 0 0 1px rgba(251, 241, 226, .25);
+    text-align: center;
+
+    b {
+        display: block;
+        font-size: 1.05rem;
+        margin-bottom: 6px;
+    }
+
+    .rating {
+        display: block;
+        font-size: .8rem;
+        color: var(--apricot);
+        letter-spacing: .06em;
+    }
+
+    .price {
+        display: block;
+        font-size: .85rem;
+        color: #F3D3C8;
+        margin-top: 4px;
+    }
+
+    .btn {
+        margin-top: 14px;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+// ==== ниже — из css/mockup.css: увеличенный вариант ленты вкусов
+// (design-review, на боевых страницах не используется) ====
+.flavor-line--v2 {
+    .flavor-dot-item {
+        width: 118px;
+
+        i {
+            width: 72px;
+            height: 72px;
+            padding: 16px;
+
+            @media (prefers-reduced-motion: no-preference) {
+                &:hover {
+                    transform: scale(1.55) rotate(-4deg);
+                }
+            }
+        }
+
+        span {
+            font-size: .82rem;
+        }
+    }
+}

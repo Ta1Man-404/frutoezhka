@@ -1,0 +1,15 @@
+// ===== adaptive/sets.scss =====
+// Адаптив sets.scss, вынесенный из базового файла (Task 4).
+//
+// @media (prefers-reduced-motion: …) (.flavor-rainbow span, .flavor-rainbow:hover)
+// остались в базовом sets.scss: это переключатель режима, а не адаптив.
+//
+// @media (max-width: 1439px) переехал сюда из adaptive/catalog.scss вместе
+// с .set-card/.set-card-featured (Ruling 10, Task 11) — .set-card слился в
+// .sets-item, .set-card-featured остался своим классом.
+
+@media (max-width: 1439px) {
+    .sets-item, .set-card-featured {
+        width: 230px;
+    }
+}

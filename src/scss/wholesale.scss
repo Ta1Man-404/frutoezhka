@@ -1,0 +1,121 @@
+// ===== wholesale.scss =====
+// Оптовая страница и контакты. Все @media по ширине (в том числе два общих,
+// затрагивающих другие секции — hero, каталог, наборы, процесс) вынесены
+// в adaptive/wholesale.scss (Task 4). Их селекторы там намеренно НЕ обёрнуты
+// во вложенность — это чужие классы из hero/catalog/sections.scss, и там
+// они тоже плоские: специфичность должна совпадать один-в-один, иначе
+// перебивающее правило (adaptive/wholesale.scss грузится последним среди
+// всех шести адаптивных файлов) перестанет работать.
+
+/* ===== wholesale / contacts page ===== */
+.wholesale-hero {
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    gap: 40px;
+    padding: clamp(40px, 6vw, 64px) clamp(20px, 4vw, 56px);
+    align-items: center;
+}
+
+.wholesale-copy {
+    .eyebrow {
+        margin-bottom: 14px;
+        display: inline-block;
+    }
+
+    h2 {
+        font-size: clamp(1.9rem, 3vw, 2.6rem);
+    }
+
+    p {
+        margin-top: 16px;
+        color: var(--ink-soft);
+        max-width: 48ch;
+    }
+}
+
+.wholesale-list {
+    margin-top: 22px;
+    display: grid;
+    gap: 12px;
+    padding: 0;
+
+    li {
+        list-style: none;
+        display: flex;
+        gap: 10px;
+        font-size: .92rem;
+
+        &::before {
+            content: "✓";
+            color: var(--olive);
+            font-weight: 800;
+        }
+    }
+}
+
+.phone-card {
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+
+    .eyebrow {
+        color: var(--coral-deep);
+    }
+}
+
+.phone-number {
+    font-family: 'Yeseva One', serif;
+    font-size: 2.1rem;
+    letter-spacing: .01em;
+    white-space: nowrap;
+}
+
+.phone-hint {
+    font-size: .82rem;
+    color: var(--ink-soft);
+}
+
+.email-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .92rem;
+    font-weight: 600;
+    color: var(--ink);
+
+    svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+        color: var(--coral-deep);
+    }
+
+    &:hover {
+        color: var(--coral-deep);
+    }
+}
+
+.wholesale-note {
+    background: var(--board);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 0 clamp(20px, 4vw, 56px) 40px;
+    font-size: .9rem;
+    color: var(--ink-soft);
+
+    b {
+        color: var(--ink);
+    }
+
+    a {
+        text-decoration: underline;
+        color: var(--coral-deep);
+        font-weight: 700;
+    }
+}
+

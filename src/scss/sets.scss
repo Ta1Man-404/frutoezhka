@@ -1,0 +1,353 @@
+// ===== sets.scss =====
+// Наборы: интро на CSS keyframes, выход по скроллу, статичный фолбэк,
+// радуга вкусов. Вложенность — от корня секции, не глубже 4 уровней.
+//
+// .sets-scroller > .sets-stage > .sets-content > .sets-track > .sets-item
+// в разметке — цепочка из пяти узлов; вложить её всю значило бы уйти на
+// 5-й уровень, поэтому .sets-content, .sets-head, .sets-track, .sets-item
+// оставлены отдельными корнями (сами по себе не глубже 2 уровней), а не
+// вложены друг в друга до конца.
+//
+// .set-grid, .sets-item (слияние бывших .set-card/.set-card--v2/.sets-card)
+// и .set-card-featured перенесены сюда из catalog.scss (Ruling 10, долг с
+// Task 3) — секция «наборы», а не общий файл каталога, их настоящее место.
+
+/* ===== sets: интро играет само, выход остаётся на скролле =====
+   Вход: IntersectionObserver в Sets (sets.js) ставит .is-playing на
+   .sets-stage, когда секция попадает в кадр — дальше интро целиком ведёт
+   CSS (keyframes ниже), скролл при этом не блокируется. Выход по-прежнему
+   считает Viewport прогресс скролла (в px, с учётом заморозки на зуме) и
+   двигает inline-стили — передача эстафеты между интро и обработчиком
+   выхода описана у класса .is-played ниже. Карточки живут в одном
+   горизонтальном ряду (не грид с переносом), чтобы общая высота контента
+   не зависела от ширины экрана — это и не даёт контенту вылезти за
+   пределы 100vh sticky-кадра на узких экранах. */
+.sets-scroller {
+    position: relative;
+    height: calc(100vh + 180vh);
+
+    .sets-stage {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow: hidden;
+        background: #0d0704;
+    }
+
+    /* JS-driven fallback: reduced motion или слишком низкий экран для
+       интро/выхода (Sets.init() отступает и вешает этот класс вместо
+       анимации) — плоская статичная секция, полосы превращаются в
+       неподвижную рамку. */
+    &.sets-static {
+        height: auto;
+
+        .sets-stage {
+            position: relative;
+            height: auto;
+            min-height: 0;
+            padding: clamp(40px, 6vw, 64px) 0;
+        }
+
+        .sets-bar {
+            height: 0 !important;
+        }
+
+        .sets-content,
+        .sets-head,
+        .sets-item {
+            opacity: 1 !important;
+            transform: none !important;
+        }
+    }
+}
+
+//------ Кинематографичное интро ------\\
+// Запускается один раз, когда секция попадает в кадр. Скролл при этом
+// не блокируется — пользователь волен листать дальше в любой момент.
+
+.sets-stage {
+
+    // Исходное состояние: полос нет, содержимое скрыто
+    .sets-bar { height: 0; }
+    .sets-bg { transform: scale(1.07); }
+    .sets-head,
+    .sets-item { opacity: 0; transform: translateY(28px); }
+
+    &.is-playing {
+        .sets-bar--top {
+            animation: setsBarTopIn 0.9s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+        .sets-bar--bottom {
+            animation: setsBarIn 0.9s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+        .sets-bg {
+            animation: setsBgZoomOut 1.6s 0.1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+        .sets-head {
+            animation: setsFadeUp 0.7s 0.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+        .sets-item {
+            animation: setsFadeUp 0.7s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+            animation-delay: calc(0.55s + var(--i) * 0.12s);
+        }
+    }
+
+    // Эстафета: интро доиграло, конечный вид держится обычными правилами.
+    // Без этого `forwards` перебивал бы inline-стили обработчика выхода.
+    &.is-played {
+        .sets-bar--top { height: calc(13% + var(--header-h, 0px)); }
+        .sets-bar--bottom { height: 13%; }
+        .sets-bg { transform: scale(1); }
+        .sets-head,
+        .sets-item { opacity: 1; transform: none; }
+    }
+}
+
+// Верхняя полоса шире на высоту липкой шапки: шапка накрывает её первые
+// header-h пикселей, и без добавки видимая полоска вышла бы уже нижней.
+@keyframes setsBarTopIn {
+    from { height: 0; }
+    to   { height: calc(13% + var(--header-h, 0px)); }
+}
+
+@keyframes setsBarIn {
+    from { height: 0; }
+    to   { height: 13%; }
+}
+
+@keyframes setsBgZoomOut {
+    from { transform: scale(1.07); }
+    to   { transform: scale(1); }
+}
+
+@keyframes setsFadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.sets-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: linear-gradient(rgba(8, 5, 2, .58), rgba(8, 5, 2, .58)), url('.././static/images/sets-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+}
+
+.sets-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 0%;
+    background: #150c07;
+    z-index: 3;
+    pointer-events: none;
+
+    &--top { top: 0; }
+    &--bottom { bottom: 0; }
+}
+
+.sets-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(14px, 2.6vw, 26px);
+    opacity: 1;
+}
+
+.sets-head {
+    position: relative;
+    padding: 12px 28px 16px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: -14px -20% -20px;
+        z-index: -1;
+        background: radial-gradient(ellipse at center, rgba(4, 2, 1, .62) 0%, rgba(4, 2, 1, 0) 72%);
+    }
+
+    h2 {
+        color: var(--cream);
+        text-shadow: 0 2px 18px rgba(0, 0, 0, .65), 0 1px 3px rgba(0, 0, 0, .6);
+    }
+
+    .eyebrow-light {
+        color: var(--apricot);
+        text-shadow: 0 1px 10px rgba(0, 0, 0, .65);
+    }
+}
+
+.sets-track {
+    display: flex;
+    gap: 16px;
+    max-width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    padding: 32px clamp(20px, 6vw, 10vw) 32px;
+}
+
+// перенесено из catalog.scss (Ruling 10): фиксированная ширина карточек —
+// flex-ряд с переносом вместо fr-грида, чтобы % / fr колонка не сжимала
+// карточку настолько, что в промежуточном разрешении подпись переносится
+// криво; px-ширина так не ломается. В разметке сейчас не используется,
+// сохранён как есть при переносе.
+.set-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+}
+
+// .sets-item — слияние трёх легаси-классов одного узла (Task 11):
+// set-card (catalog.scss) + set-card--v2 (ниже в этом файле) + sets-card —
+// след итераций дизайна, в разметке остаётся один класс. Значения ниже —
+// то, что реально применялось при старом порядке подключения стилей
+// (sets.min.css грузился после catalog.min.css, поэтому --v2 выигрывал
+// gap: 10px против 12px у set-card).
+.sets-item {
+    width: 244px;
+    background: var(--cream);
+    border-radius: 16px;
+    padding: 20px 16px;
+    box-shadow: inset 0 0 0 1px var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: none;
+    scroll-snap-align: center;
+
+    .set-weight-badge {
+        align-self: flex-start;
+        font-size: .72rem;
+        font-weight: 800;
+        color: var(--ink-soft);
+        background: var(--board);
+        padding: 5px 10px;
+        border-radius: 100px;
+    }
+
+    .set-pack-count {
+        font-family: 'Yeseva One', serif;
+        font-size: 1.3rem;
+        line-height: 1.15;
+
+        small {
+            display: block;
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: .68rem;
+            font-weight: 700;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-top: 2px;
+        }
+    }
+
+    .set-flavors-label {
+        font-size: .74rem;
+        font-weight: 700;
+        color: var(--ink-soft);
+        margin-top: 2px;
+    }
+}
+
+// перенесено из catalog.scss (Ruling 10) — доп. класс на шестой карточке,
+// на данный момент отличается от .sets-item только шириной (совпадает с
+// базовой, расходится в адаптиве, см. adaptive/sets.scss).
+.set-card-featured {
+    width: 244px;
+}
+
+.chip-row {
+    display: grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap: 5px;
+
+    i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--board);
+        box-shadow: inset 0 0 0 1px var(--line);
+        padding: 15%;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+}
+
+
+/* ===== flavor rainbow (replaces the svg chip circles) ===== */
+.flavor-rainbow {
+    display: flex;
+    width: 100%;
+    height: 14px;
+    border-radius: 100px;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px var(--line);
+
+    span {
+        flex: 1;
+        height: 100%;
+
+        @media (prefers-reduced-motion: no-preference) {
+            transition: transform .2s ease;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        &:hover span {
+            transform: scaleY(1.25);
+        }
+    }
+}
+
+.flavor-rainbow-names {
+    font-size: .76rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+}
+
+.set-weight {
+    font-family: 'Yeseva One', serif;
+    font-size: 1.3rem;
+}
+
+.set-desc {
+    font-size: .78rem;
+    color: var(--ink-soft);
+    flex: 1;
+}
+
+.price-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: .76rem;
+    font-weight: 800;
+    color: var(--ink-soft);
+    border: 1.5px dashed var(--line);
+    padding: 6px 12px;
+    border-radius: 100px;
+    width: fit-content;
+
+    &::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--apricot);
+    }
+}

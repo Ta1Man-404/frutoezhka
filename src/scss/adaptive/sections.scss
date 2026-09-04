@@ -1,0 +1,9 @@
+// ===== adaptive/sections.scss =====
+// Адаптив sections.scss, вынесенный из базового файла (Task 4).
+//
+// В sections.scss нет ни одного медиа-запроса по ширине — единственный
+// @media (prefers-reduced-motion: …) (.flavor-line--v2 i:hover, design-review,
+// на боевых страницах не используется) остался в базовом sections.scss:
+// это переключатель режима, а не адаптив. Файл создан пустым намеренно,
+// чтобы сохранить контракт dist/styles/adaptive/sections.min.css из
+// брифа задачи 4.

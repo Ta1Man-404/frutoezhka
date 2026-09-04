@@ -1,0 +1,61 @@
+// ===== adaptive/hero.scss =====
+// Адаптив hero.scss, вынесенный из базового файла (Task 4), сгруппирован
+// по брейкпоинту (от большего к меньшему), а не по компоненту.
+//
+// @media (prefers-reduced-motion: …) остались в базовом hero.scss —
+// это переключатель режима, а не адаптив.
+//
+// Селекторы восстановлены на той же глубине вложенности, что и в
+// исходном hero.scss, чтобы специфичность не изменилась:
+// .hero .hero-copy (было .hero { .hero-copy { @media {…} } }),
+// .hero-visual::before (было .hero-visual { &::before { @media {…} } }),
+// .hero-shape svg (было .hero-shape--v2 { @media { svg {…} } } — классы
+// hero-shape--v2/--slider слиты в hero-shape в Task 10).
+//
+// НЕ перенесены (обнаружено эталонными скриншотами, зафиксировано
+// вычислением computed style до/после):
+// — .hero-shape { @media(980){ clip-path:none; padding-bottom:48px } } —
+//   в исходном hero.scss эта пара всегда перебивалась более поздним в
+//   том же файле безусловным правилом .hero-shape--slider{padding:0}
+//   (та же специфичность 0,1,0, оба класса стоят на одном элементе —
+//   см. комментарий у .hero-shape там же). padding-bottom никогда
+//   не проявлялся (computed height .hero-shape на 320px = 280, не 328).
+// — @media(980){ .hero-shape--slider .hero-slider{clip-path:none;
+//   border-radius:…} } — тоже всегда перебивался более поздним в том же
+//   файле безусловным .hero-shape--slider .hero-slider{clip-path:url(#heroClip);
+//   border-radius:0} той же специфичности 0,2,0.
+// Обе пары мёртвые уже в базе (69b630b): выигрывающее правило стоит в
+// hero.scss физически позже проигрывающего media-блока, поэтому исход не
+// зависит от порядка файлов. Если бы их всё равно перенести в adaptive/ —
+// он грузится ПОСЛЕ всего hero.scss, порядок победителя перевернулся бы,
+// и .hero-shape получил бы реальный padding-bottom:48px, а .hero-slider —
+// потерял бы clip-path:url(#heroClip) (ровно это и поймала сеть на 6
+// ширинах ≤980 при первой попытке переноса). Раз оба правила ни на что
+// не влияют при любом брейкпоинте, их просто не переносим — вырезаны из
+// hero.scss насовсем, appearance не меняется.
+
+@media (max-width: 1439px) {
+    .hero .hero-copy {
+        max-width: 480px;
+    }
+
+    .hero {
+        grid-template-columns: 620px 1fr;
+        min-height: 520px;
+    }
+}
+
+@media (max-width: 980px) {
+    .hero-visual::before {
+        opacity: .08;
+    }
+
+    .hero-shape {
+        svg {
+            display: none;
+        }
+
+        background: linear-gradient(155deg, var(--apricot) 0%, var(--coral-deep) 100%);
+        border-radius: 0 0 28px 28px;
+    }
+}

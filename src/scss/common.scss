@@ -1,0 +1,415 @@
+// ===== common.scss =====
+// Общее для всех страниц: шрифты, переменные, сброс, утилитарные классы,
+// полноэкранный лоадер, шапка, подвал, кнопки, микро-анимации, scroll-reveal.
+// Вложенность — от корня секции, не глубже 4 уровней.
+//
+// .site-nav оставлен плоским: его перебивает общий медиа-запрос в
+// wholesale.scss (грузится последним). Микро-анимации и scroll-reveal
+// не переведены на вложенность — они и так плоский медиа-запрос,
+// затрагивающий классы из ДРУГИХ файлов (catalog/sets/sections),
+// вкладывать там нечего.
+
+@font-face {
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 200 900;
+    src: url('.././static/fonts/nunito-cyrext.woff2') format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F;
+}
+
+@font-face {
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 200 900;
+    src: url('.././static/fonts/nunito-cyr.woff2') format('woff2');
+    unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    font-weight: 200 900;
+    src: url('.././static/fonts/nunito-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+2000-206F, U+20AC;
+}
+
+@font-face {
+    font-family: 'Yeseva One';
+    font-style: normal;
+    font-weight: 400;
+    src: url('.././static/fonts/yeseva-cyrext.woff2') format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F;
+}
+
+@font-face {
+    font-family: 'Yeseva One';
+    font-style: normal;
+    font-weight: 400;
+    src: url('.././static/fonts/yeseva-cyr.woff2') format('woff2');
+    unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+    font-family: 'Yeseva One';
+    font-style: normal;
+    font-weight: 400;
+    src: url('.././static/fonts/yeseva-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+2000-206F, U+20AC;
+}
+
+:root {
+    --cream: #FBF1E2;
+    --board: #EFE2CB;
+    --ink: #2C1F13;
+    --ink-soft: #79695A;
+    --apricot: #FF8A52;
+    --coral: #E24B3A;
+    --coral-deep: #8F2A1F;
+    --olive: #74822E;
+    --line: rgba(44, 31, 19, .14);
+    --shadow: 0 20px 50px -20px rgba(44, 31, 19, .35);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-padding-top: 24px;
+
+    @media (prefers-reduced-motion: no-preference) {
+        scroll-behavior: smooth;
+    }
+}
+
+section[id], div[id] {
+    scroll-margin-top: 24px;
+}
+
+body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, .display {
+    font-family: 'Yeseva One', serif;
+    font-weight: 400;
+    line-height: 1.12;
+    text-wrap: balance;
+    margin: 0;
+}
+
+p {
+    margin: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+:focus-visible {
+    outline: 2px solid var(--coral-deep);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.eyebrow {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 800;
+    font-size: .72rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--coral-deep);
+}
+
+.mark {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    .mark-word {
+        font-family: 'Yeseva One', serif;
+        font-size: 1.15rem;
+    }
+}
+
+/* ===== full-page loader ===== */
+.page-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cream);
+    transition: opacity .4s ease, visibility .4s ease;
+
+    &.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    &-mark {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 4px solid var(--board);
+        border-top-color: var(--coral);
+
+        @media (prefers-reduced-motion: no-preference) {
+            animation: page-loader-spin .9s linear infinite;
+        }
+    }
+
+    &-logo {
+        width: 58%;
+        height: 58%;
+        object-fit: contain;
+    }
+}
+
+@keyframes page-loader-spin {
+    to { transform: rotate(360deg); }
+}
+
+
+/* ===== site header ===== */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px clamp(20px, 4vw, 56px);
+    background: var(--cream);
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+// намеренно плоский — см. пояснение в шапке файла
+.site-nav {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+
+    a {
+        position: relative;
+        font-family: 'Yeseva One', serif;
+        font-weight: 400;
+        font-size: 1rem;
+        color: var(--coral-deep);
+        padding-bottom: 4px;
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--coral-deep);
+            transform: translateX(-50%) scaleX(0);
+            transform-origin: center;
+
+            @media (prefers-reduced-motion: no-preference) {
+                transition: transform .25s ease;
+            }
+        }
+
+        &:hover::after,
+        &:focus-visible::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        &[aria-current="page"] {
+            color: var(--coral-deep);
+        }
+    }
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 100px;
+    font-weight: 800;
+    font-size: .88rem;
+}
+
+// цветовые варианты .btn — на том же элементе (не потомки), поэтому
+// самостоятельные плоские классы, а не вложенность вида .btn .btn-primary
+.btn-primary {
+    background: var(--coral);
+    color: var(--cream);
+    box-shadow: 0 10px 24px -10px rgba(226, 75, 58, .6);
+
+    &:hover {
+        background: var(--coral-deep);
+    }
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1.5px var(--line);
+
+    &:hover {
+        box-shadow: inset 0 0 0 1.5px var(--ink);
+    }
+}
+
+.btn-ghost {
+    background: var(--board);
+    color: var(--ink);
+}
+
+
+/* ===== footer ===== */
+.site-footer {
+    padding: 32px clamp(20px, 4vw, 56px);
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: .82rem;
+    color: var(--ink-soft);
+
+    nav {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+}
+
+
+/* ===== micro-interactions ===== */
+// затрагивает классы из catalog.scss (.flavor-card, .chip-row), sets.scss
+// (.sets-item, бывший .set-card — переименован в Task 11), sections.scss
+// (.flavor-dot-item) и .btn выше — общий медиа-запрос, вкладывать не во
+// что, оставлен как в исходном style.css
+@media (prefers-reduced-motion: no-preference) {
+    .flavor-card,
+    .sets-item {
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .flavor-card:hover,
+    .sets-item:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: var(--shadow);
+    }
+
+    .chip-row i,
+    .flavor-dot-item i {
+        transition: transform .2s ease;
+    }
+
+    .chip-row i:hover {
+        transform: scale(1.12) rotate(-4deg);
+    }
+
+    .flavor-dot-item i:hover {
+        transform: scale(1.35) rotate(-4deg);
+    }
+
+    .btn {
+        transition: transform .15s ease;
+    }
+
+    .btn:active {
+        transform: scale(.96);
+    }
+}
+
+
+/* ===== scroll reveal ===== */
+@media (prefers-reduced-motion: no-preference) {
+    .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity .6s ease, transform .6s ease;
+
+        &.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+
+// ==== ниже — из css/mockup.css: баннер design-review-режима ====
+// (на боевых страницах index/sertifikaty/404 не используется, но был
+// в общем css/mockup.css, вошедшем в common.scss на задаче 2 — переносим как есть)
+.review-banner {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 18px clamp(20px, 4vw, 56px);
+    font-size: .88rem;
+    line-height: 1.5;
+
+    b { color: var(--apricot); }
+}
+
+.review-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--coral-deep);
+    color: var(--cream);
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+}
+
+.review-note {
+    background: var(--board);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: .82rem;
+    color: var(--ink-soft);
+    margin-top: 18px;
+
+    b { color: var(--ink); }
+}

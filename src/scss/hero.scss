@@ -1,0 +1,298 @@
+// ===== hero.scss =====
+// Главный экран: hero, полотно и видео, статистика, декор,
+// вырезка пастилы. Вложенность — от корня секции, не глубже 4 уровней.
+//
+// .hero-visual, как и .site-nav в common.scss, .buy-grid/.process-line/
+// .process-step в sections.scss, .flavor-grid в catalog.scss, .sets-item/
+// .set-card-featured в sets.scss, оставлены плоскими намеренно: их
+// перебивают медиа-запросы в общем блоке wholesale.scss (там он общий на
+// несколько секций и грузится последним). Если обернуть их во вложенность,
+// специфичность вырастет (.hero .hero-visual вместо .hero-visual) и
+// перебивающее правило в wholesale.scss перестанет работать на узких
+// экранах — проверено эталонными скриншотами.
+
+/* ===== hero breathing room (v3 only): header/hero/catalog get the same
+   gap ===== */
+// переехало из catalog.scss (Ruling 10, Task 11) — #top сидит на самом
+// .hero, его настоящее место здесь.
+#top.hero {
+    margin: clamp(32px, 5vw, 64px) 0;
+}
+
+.hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 780px 1fr;
+    align-items: stretch;
+    min-height: 560px;
+    overflow: hidden;
+
+    .hero-copy {
+        max-width: 560px;
+        position: relative;
+        z-index: 1;
+
+        .eyebrow {
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        h1 {
+            font-size: clamp(2.1rem, 3.6vw, 3.15rem);
+            color: var(--ink);
+        }
+
+        p {
+            margin-top: 18px;
+            color: var(--ink-soft);
+            font-size: 1.08rem;
+        }
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 14px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+}
+
+// .hero-shape — намеренно плоский (не внутри .hero), см. пояснение в
+// шапке файла про .hero-visual: то же самое правило применимо и к нему.
+// Раньше узел нёс три класса (hero-shape hero-shape--v2 hero-shape--slider)
+// с осторожно разложенной специфичностью, чтобы правила не перебивали друг
+// друга непредсказуемо; Task 10 убрал фотослайдер, и вместе с ним ушла
+// причина держать классы раздельно — все три слиты в одно правило ниже,
+// вычисленные стили сверены до/после слияния.
+.hero-shape {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    align-self: stretch;
+    overflow: hidden;
+    background: none;
+    clip-path: none;
+
+    svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+
+    .hero-copy,
+    .hero-float {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+// светлая версия .eyebrow — используется и в hero, и в других секциях
+// (sets.scss, catalog.scss), поэтому не привязана к корню .hero
+.eyebrow-light {
+    color: var(--cream);
+    opacity: .85;
+}
+
+// цветовые варианты кнопки .btn (common.scss) — по аналогии с
+// .btn-primary/.btn-outline/.btn-ghost там же, флат-модификаторы
+.btn-cream {
+    background: var(--cream);
+    color: var(--coral-deep);
+
+    &:hover {
+        background: #fff;
+    }
+}
+
+.btn-outline-light {
+    background: transparent;
+    color: var(--cream);
+    box-shadow: inset 0 0 0 1.5px rgba(251, 241, 226, .6);
+
+    &:hover {
+        box-shadow: inset 0 0 0 1.5px var(--cream);
+    }
+}
+
+// .hero-visual — намеренно плоский, см. пояснение в шапке файла
+.hero-visual {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(24px, 4vw, 40px);
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image: url('.././static/images/logo.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        opacity: .14;
+    }
+}
+
+
+// ===== stat strip =====
+.stat-strip {
+    display: flex;
+    justify-content: center;
+    gap: clamp(32px, 6vw, 80px);
+    padding: clamp(24px, 4vw, 36px) 20px;
+    background: var(--board);
+    flex-wrap: wrap;
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .stat-number {
+        font-family: 'Yeseva One', serif;
+        font-size: clamp(1.8rem, 3vw, 2.4rem);
+        color: var(--coral-deep);
+    }
+
+    .stat-label {
+        font-size: .8rem;
+        color: var(--ink-soft);
+        text-transform: uppercase;
+        letter-spacing: .04em;
+    }
+}
+
+
+// ===== hero floating decor =====
+// на боевой странице сейчас не используется (нет .hero-float в разметке),
+// но сохраняем как есть — вдруг понадобится
+.hero-float {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    opacity: .85;
+    pointer-events: none;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+// .hero-float-1/2/3 в исходнике — самостоятельные классы, а не
+// .hero-float.hero-float-N, поэтому не оборачиваем через &
+.hero-float-1 { top: 12%; right: 8%; }
+.hero-float-2 { top: 55%; right: 18%; }
+.hero-float-3 { bottom: 10%; right: 4%; }
+
+@media (prefers-reduced-motion: no-preference) {
+    .hero-float-1 { animation: float-a 5s ease-in-out infinite; }
+    .hero-float-2 { animation: float-b 6.5s ease-in-out infinite; animation-delay: .8s; }
+    .hero-float-3 { animation: float-a 5.8s ease-in-out infinite; animation-delay: 1.6s; }
+}
+
+@keyframes float-a {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-14px) rotate(6deg); }
+}
+
+@keyframes float-b {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(12px) rotate(-5deg); }
+}
+
+
+// ===== hero pastila cutout =====
+.hero-pastila-float {
+    width: 100%;
+    height: 100%;
+    min-height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (prefers-reduced-motion: no-preference) {
+        animation: hero-pastila-float 6s ease-in-out infinite;
+    }
+}
+
+.hero-pastila-img {
+    max-width: 88%;
+    max-height: 88%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 28px 36px rgba(60, 20, 10, .35));
+    transition: transform .2s ease-out;
+    will-change: transform;
+}
+
+@keyframes hero-pastila-float {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-16px) rotate(2deg); }
+}
+
+
+// ==== ниже — из css/mockup.css: полотно hero v2 и видео ====
+/* ===== 2) hero video ===== */
+// заменил фотослайдер (Task 10): видео ведёт себя как гифка —
+// играет само, беззвучно, по кругу
+.hero-video {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-shape .hero-video {
+    /* video is clipped to the exact mirrored hero-shape silhouette,
+       same as the photo slider it replaced */
+    clip-path: url(#heroClip);
+}
+
+.hero-video.is-fallback {
+    // видеодорожка не пошла (энергосбережение, reduced-motion, ошибка
+    // загрузки) — остаётся кадр-постер, нарисованный браузером
+    visibility: hidden;
+}
+
+// ==== ниже — из css/mockup.css: варианты заголовка hero (design-review, ====
+// на боевых страницах не используется)
+.headline-options {
+    display: grid;
+    gap: 14px;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.headline-option {
+    background: var(--cream);
+    border-radius: 16px;
+    padding: 20px 24px;
+    box-shadow: inset 0 0 0 1px var(--line);
+
+    b {
+        display: block;
+        font-family: 'Yeseva One', serif;
+        font-size: 1.4rem;
+        font-weight: 400;
+        margin-bottom: 8px;
+    }
+
+    p {
+        font-size: .84rem;
+        color: var(--ink-soft);
+    }
+}

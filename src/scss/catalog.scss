@@ -1,0 +1,850 @@
+// ===== catalog.scss =====
+// Каталог вкусов: сетка карточек (легаси, сейчас не используется —
+// боевая разметка идёт через .catalog-scroller/.explorer ниже), слайдер
+// фото карточки, разделитель, закреплённый (pinned) слайдер каталога из
+// css/mockup-v3.css. Вложенность — от корня секции, не глубже 4 уровней.
+//
+// Карточки наборов (.set-grid/.set-card/.set-card-featured) и #top.hero
+// переехали в sets.scss/hero.scss (Ruling 10, Task 11) — этот файл больше
+// не задаёт их фикс ширины.
+//
+// .flavor-grid оставлен плоским: его перебивает общий медиа-запрос в
+// wholesale.scss (грузится последним). Обёртка во вложенность подняла бы
+// ему специфичность и перебивающее правило перестало бы работать на
+// узких экранах.
+
+.flavor-grid {
+    display: grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap: 18px;
+}
+
+.flavor-card {
+    background: var(--cream);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px var(--line);
+
+    .flavor-body {
+        padding: 16px 18px 20px;
+        text-align: center;
+
+        b {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 6px;
+        }
+
+        p {
+            font-size: .82rem;
+            color: var(--ink-soft);
+        }
+    }
+}
+
+.flavor-photo {
+    height: 320px;
+    position: relative;
+    overflow: hidden;
+    background: var(--board);
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 22%;
+    }
+
+    /* ===== catalog card slider (front / side / open photos) ===== */
+    &--slider {
+        position: relative;
+
+        .fp-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity .45s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--board);
+
+            &.is-active {
+                opacity: 1;
+                z-index: 1;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center 22%;
+            }
+
+            &.fp-slide--open img {
+                object-fit: contain;
+                padding: 18px;
+            }
+        }
+    }
+}
+
+.fp-slider-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(44, 31, 19, .55);
+    color: var(--cream);
+    font-size: .68rem;
+    font-weight: 700;
+    padding: 4px 9px 4px 7px;
+    border-radius: 100px;
+    backdrop-filter: blur(2px);
+    pointer-events: none;
+
+    svg {
+        width: 13px;
+        height: 13px;
+    }
+}
+
+.fp-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 3;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(251, 241, 226, .9);
+    color: var(--ink);
+    box-shadow: 0 4px 12px -4px rgba(44, 31, 19, .5);
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        background: var(--cream);
+        color: var(--coral-deep);
+    }
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &--prev { left: 8px; }
+    &--next { right: 8px; }
+}
+
+.fp-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.fp-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .55);
+    box-shadow: 0 0 0 1px rgba(44, 31, 19, .2);
+    padding: 0;
+    border: none;
+    cursor: pointer;
+
+    &.is-active {
+        background: var(--coral);
+        width: 16px;
+        border-radius: 100px;
+    }
+}
+
+.catalog-note {
+    margin-top: 22px;
+    font-size: .9rem;
+    color: var(--ink-soft);
+    background: var(--board);
+    padding: 16px 20px;
+    border-radius: 12px;
+
+    b {
+        color: var(--ink);
+    }
+
+    a {
+        text-decoration: underline;
+        color: var(--coral-deep);
+        font-weight: 700;
+    }
+}
+
+
+// .set-grid, .set-card и .set-card-featured переехали в sets.scss (Ruling
+// 10, Task 11) — секция «наборы», а не общий файл каталога, их настоящее
+// место; .set-card слился там с .set-card--v2/.sets-card в .sets-item.
+.set-featured-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+
+/* ===== catalog divider (long pastila flavor line) ===== */
+.catalog-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0 28px;
+
+    &::before,
+    &::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+    }
+
+    span {
+        font-family: 'Yeseva One', serif;
+        font-size: 1.1rem;
+        color: var(--coral-deep);
+        white-space: nowrap;
+        text-align: center;
+    }
+}
+
+.catalog-divider-note {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: .85rem;
+    margin: -16px 0 28px;
+}
+
+
+// ==== ниже — из css/mockup.css: дублирующий слайдер фото карточки каталога
+// (design-review, на боевых страницах не используется) ====
+.flavor-photo {
+    &--slider {
+        position: relative;
+
+        .fp-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity .45s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--board);
+
+            &.is-active {
+                opacity: 1;
+                z-index: 1;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center 22%;
+            }
+
+            &.fp-slide--open img {
+                object-fit: contain;
+                padding: 18px;
+            }
+
+            &--placeholder {
+                flex-direction: column;
+                gap: 8px;
+                color: var(--ink-soft);
+                font-size: .74rem;
+                text-align: center;
+                padding: 16px;
+            }
+        }
+    }
+}
+
+/* affordance badge — hints a slider exists even before any interaction */
+.fp-slider-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(44, 31, 19, .55);
+    color: var(--cream);
+    font-size: .68rem;
+    font-weight: 700;
+    padding: 4px 9px 4px 7px;
+    border-radius: 100px;
+    backdrop-filter: blur(2px);
+    pointer-events: none;
+
+    svg {
+        width: 13px;
+        height: 13px;
+    }
+}
+
+.fp-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 3;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(251, 241, 226, .9);
+    color: var(--ink);
+    box-shadow: 0 4px 12px -4px rgba(44, 31, 19, .5);
+
+    &:hover {
+        background: var(--cream);
+        color: var(--coral-deep);
+    }
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    &--prev { left: 8px; }
+    &--next { right: 8px; }
+}
+
+.fp-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.fp-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .55);
+    box-shadow: 0 0 0 1px rgba(44, 31, 19, .2);
+    padding: 0;
+    cursor: pointer;
+
+    &.is-active {
+        background: var(--coral);
+        width: 16px;
+        border-radius: 100px;
+    }
+}
+
+// ==== ниже — весь css/mockup-v3.css: закреплённый (pinned) слайдер каталога ====
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ===== pinned catalog scroller ===== */
+/* extra scroll budget beyond the 100vh pin — must match the T thresholds in mockup-v3.js */
+.catalog-scroller {
+    position: relative;
+    height: calc(100vh + 420vh);
+
+    // Статичный каталог для prefers-reduced-motion — таймлайн не заводится,
+    // класс вешает initScroller() в catalog.js. Пиннинг и прозрачности
+    // отключаются, слои идут в потоке друг за другом.
+    &.catalog-static {
+        height: auto;
+
+        .catalog-stage {
+            position: relative;
+            height: auto;
+        }
+
+        .catalog-layer {
+            position: relative;
+            opacity: 1;
+
+            &--title {
+                padding: 48px clamp(20px, 4vw, 56px);
+            }
+        }
+
+        .explorer {
+            position: relative;
+        }
+
+        .explorer-inner {
+            max-height: none;
+            overflow-y: visible;
+        }
+
+        .scroll-hint {
+            display: none;
+        }
+    }
+}
+
+.catalog-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: #241207;
+}
+
+.catalog-layer {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+
+    &[inert] {
+        pointer-events: none;
+    }
+
+    &--title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(160deg, #3a2010 0%, #22120a 100%);
+        text-align: center;
+    }
+}
+
+.catalog-title-card .eyebrow {
+    font-size: clamp(2rem, 6vw, 4rem);
+    letter-spacing: .08em;
+}
+
+.scroll-hint {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: rgba(210, 205, 198, .5);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    pointer-events: none;
+    transform: translateX(-50%);
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        animation: scrollHintBob 1.8s ease-in-out infinite;
+    }
+}
+
+@keyframes scrollHintBob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(9px); }
+}
+
+/* ===== explorer shell (fills one catalog-layer, sized to fit 100vh without clipping) ===== */
+.explorer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 12px clamp(20px, 4vw, 56px);
+    background: linear-gradient(160deg, #3a2010 0%, #22120a 100%);
+    color: var(--cream);
+
+    &--special {
+        background: linear-gradient(160deg, #33200c 0%, #1d1005 100%);
+    }
+
+    .eyebrow-light {
+        color: var(--apricot);
+    }
+}
+
+.explorer-bg {
+    position: absolute;
+    inset: -15% -10%;
+    z-index: 0;
+    pointer-events: none;
+    will-change: transform;
+
+    &-fruit {
+        position: absolute;
+        opacity: .14;
+        filter: saturate(.7);
+
+        img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+    }
+}
+
+.explorer-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1700px;
+    max-height: 100%;
+    margin: 0 auto;
+    overflow-y: auto;
+    text-align: center;
+
+    h2 {
+        color: var(--cream);
+        font-size: clamp(1.4rem, 2.6vw, 2rem);
+        margin-top: 0;
+    }
+}
+
+.explorer-sub {
+    margin-top: 4px;
+    font-size: .84rem;
+    color: rgba(251, 241, 226, .72);
+}
+
+.catalog-photo-note {
+    margin-top: 8px;
+    font-size: .74rem;
+    font-style: italic;
+    color: rgba(251, 241, 226, .5);
+}
+
+/* ===== autoplay toggle ===== */
+.autoplay-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0 0;
+    font-size: .82rem;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+
+    input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+
+        &:checked ~ .autoplay-track {
+            background: var(--apricot);
+
+            .autoplay-thumb {
+                transform: translateX(18px);
+            }
+        }
+
+        &:focus-visible ~ .autoplay-track {
+            outline: 2px solid var(--cream);
+            outline-offset: 3px;
+        }
+    }
+
+    &[data-disabled] {
+        opacity: .45;
+        cursor: not-allowed;
+    }
+}
+
+.autoplay-track {
+    position: relative;
+    width: 42px;
+    height: 24px;
+    border-radius: 100px;
+    background: rgba(251, 241, 226, .22);
+    flex: none;
+    transition: background .2s ease;
+}
+
+.autoplay-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--cream);
+    transition: transform .2s ease;
+}
+
+.autoplay-progress {
+    width: min(240px, 60vw);
+    height: 3px;
+    margin: 8px auto 0;
+    border-radius: 100px;
+    background: rgba(251, 241, 226, .16);
+    overflow: hidden;
+
+    &-bar {
+        height: 100%;
+        width: 0%;
+        background: var(--apricot);
+        border-radius: inherit;
+
+        &.is-running {
+            transition: width var(--tick-duration, 7.5s) linear;
+        }
+    }
+}
+
+/* ===== carousel ===== */
+.carousel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    margin-bottom: 16px;
+    width: 100%;
+
+    &-viewport {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    &-track {
+        display: flex;
+        will-change: transform;
+
+        @media (prefers-reduced-motion: no-preference) {
+            &.is-animating {
+                transition: transform .45s cubic-bezier(.22, .61, .36, 1);
+            }
+        }
+    }
+
+    &-item {
+        flex: 0 0 var(--item-step, 130px);
+        background: none;
+        border: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 0;
+        cursor: pointer;
+        opacity: calc(1 - min(var(--dist, 0), 4) * .2);
+        transform: scale(calc(1 - min(var(--dist, 0), 4) * .07));
+
+        i {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: var(--cream);
+            box-shadow: 0 8px 16px -8px rgba(0, 0, 0, .5);
+            padding: 13px;
+            transition: width .3s ease, height .3s ease, box-shadow .3s ease;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+
+        span {
+            font-size: .72rem;
+            font-weight: 700;
+            color: rgba(251, 241, 226, .75);
+            text-align: center;
+            max-width: 90%;
+            line-height: 1.2;
+        }
+
+        &.is-active {
+            i {
+                width: 78px;
+                height: 78px;
+                box-shadow: 0 0 0 3px var(--apricot), 0 12px 26px -10px rgba(0, 0, 0, .65);
+            }
+
+            span {
+                color: var(--cream);
+            }
+        }
+    }
+
+    &-arrow {
+        flex: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(251, 241, 226, .12);
+        color: var(--cream);
+        box-shadow: inset 0 0 0 1px rgba(251, 241, 226, .3);
+
+        &:hover {
+            background: var(--cream);
+            color: var(--coral-deep);
+        }
+
+        svg {
+            width: 18px;
+            height: 18px;
+        }
+    }
+}
+
+/* ===== collage =====
+   fixed px tracks per breakpoint instead of fr/vw/clamp — a fluid track can
+   land at an awkward in-between width where a card/photo looks squeezed;
+   a concrete value per tier never does */
+.collage {
+    display: grid;
+    grid-template-columns: 700px 322px;
+    grid-template-rows: 251px 251px;
+    gap: 18px;
+    max-width: 1040px;
+    height: 520px;
+    margin: 0 auto;
+}
+
+.collage-slot {
+    position: relative;
+    border: none;
+    padding: 0;
+    border-radius: 18px;
+    overflow: hidden;
+    /* fallback paint before JS sets each slot's own analysed background
+       (mockup-v3.js fillSlot) — matches the overwhelming majority case */
+    background: #fff;
+    box-shadow: inset 0 0 0 1px rgba(251, 241, 226, .16);
+
+    &--big {
+        grid-row: 1 / 3;
+        grid-column: 1;
+        cursor: default;
+
+        &[data-key="open"] img {
+            object-fit: cover;
+            padding: 0;
+        }
+    }
+
+    &--small {
+        cursor: pointer;
+
+        &:hover {
+            box-shadow: inset 0 0 0 2px var(--apricot);
+        }
+
+        &[data-key="open"] img {
+            object-fit: contain;
+            padding: 2%;
+        }
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+        padding: 6%;
+    }
+
+    &[data-key="side"] img {
+        /* side photos vary in aspect ratio and in exact off-white tone —
+           cover fills the slot edge-to-edge so no letterboxed strip of the
+           photo's own (sometimes slightly grey) background is ever exposed
+           next to the slot's pure white, in either the big or small state */
+        object-fit: cover;
+        padding: 0;
+    }
+
+    &.is-placeholder {
+        .collage-placeholder {
+            display: flex;
+        }
+
+        img {
+            display: none;
+        }
+    }
+
+    &.is-swapping {
+        @media (prefers-reduced-motion: no-preference) {
+            animation: collageSwap .35s ease;
+        }
+    }
+}
+
+@keyframes collageSwap {
+    0% { opacity: .35; transform: scale(.96); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.collage-placeholder {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: .74rem;
+    color: rgba(251, 241, 226, .75);
+    /* own opaque dark base — must stay legible regardless of the slot's own
+       background (white for real photos, transparent-dark for the cutout) */
+    background:
+        repeating-linear-gradient(135deg, rgba(0, 0, 0, .08) 0 10px, rgba(0, 0, 0, .16) 10px 20px),
+        #2c1f13;
+    padding: 10px;
+}
+
+.collage-label {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: 1;
+    background: rgba(20, 10, 5, .6);
+    color: var(--cream);
+    font-size: .68rem;
+    font-weight: 700;
+    padding: 5px 11px;
+    border-radius: 100px;
+    backdrop-filter: blur(2px);
+}
+
+// #top.hero переехал в hero.scss (Ruling 10, Task 11) — секция «hero»,
+// а не общий файл каталога, его настоящее место.
