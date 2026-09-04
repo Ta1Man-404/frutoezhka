@@ -13,6 +13,7 @@ export class Hero {
         this.video = document.querySelector('.hero-video');
         if (!this.video) return;                  // не эта страница
 
+        this.loader = document.querySelector('.hero-video-loader');
         this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         this.lastTime = 0;
         this.looped = false;
@@ -23,9 +24,15 @@ export class Hero {
         if (this.reduceMotion) {
             this.video.removeAttribute('autoplay');
             this.video.pause();
-            return;                               // постер уже показан браузером
+            return;                               // постер уже показан браузером, индикатор не включаем
         }
 
+        // Индикатор включаем сразу; появление отложено CSS-переходом
+        // (transition-delay ~400мс на .is-loading в hero.scss), поэтому
+        // на быстром старте (локально 200мс) вспышки не будет.
+        if (this.loader) this.loader.classList.add('is-loading');
+
+        this.video.addEventListener('playing', this.hideLoader.bind(this), {once: true});
         this.video.addEventListener('error', this.showPoster.bind(this), true);
         this.video.addEventListener('timeupdate', this.skipIntroOnLoop.bind(this));
 
@@ -33,6 +40,12 @@ export class Hero {
         if (attempt && typeof attempt.catch === 'function') {
             attempt.catch(this.showPoster.bind(this));
         }
+    }
+
+    // Гасит индикатор загрузки: по факту старта воспроизведения либо по
+    // любому из фолбэков ниже — висящий вечно спиннер был бы враньём.
+    hideLoader() {
+        if (this.loader) this.loader.classList.remove('is-loading');
     }
 
     // Заставка с логотипом (первые INTRO_SKIP секунд) играет один раз при
@@ -53,5 +66,6 @@ export class Hero {
     // удалять элемент нельзя — иначе исчезнет и постер.
     showPoster() {
         this.video.classList.add('is-fallback');
+        this.hideLoader();
     }
 }

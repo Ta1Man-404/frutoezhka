@@ -11,6 +11,7 @@
 <meta name="theme-color" content="#FF8A52">
 <link rel="icon" type="image/png" href="dist/static/images/logo.png">
 <link rel="apple-touch-icon" href="dist/static/images/logo.png">
+<link rel="preload" as="image" href="dist/static/images/hero-poster.jpg" fetchpriority="high">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
@@ -100,12 +101,15 @@
     </svg>
     <video class="hero-video"
            autoplay muted loop playsinline
-           preload="metadata"
+           preload="auto"
            poster="dist/static/images/hero-poster.jpg">
       <source src="dist/static/video/hero.webm"       type="video/webm" media="(min-width: 768px)">
       <source src="dist/static/video/hero.mp4"        type="video/mp4"  media="(min-width: 768px)">
       <source src="dist/static/video/hero-mobile.mp4" type="video/mp4">
     </video>
+    <div class="hero-video-loader" aria-hidden="true">
+      <span class="hero-video-loader-spinner"></span>
+    </div>
   </div>
 
   <div class="hero-visual">

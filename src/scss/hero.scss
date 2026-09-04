@@ -268,6 +268,51 @@
     visibility: hidden;
 }
 
+// Индикатор ожидания поверх постера, пока видео не заиграло (Task 14).
+// Сидит в той же обёртке, что и .hero-video, и обрезается той же формой
+// heroClip, что и сам ролик. Появление отложено на ~400мс через
+// transition-delay на .is-loading — на быстром старте (локально 200мс)
+// класс успевает уйти раньше, чем начнётся переход, и вспышки не будет.
+// Скрытие — без задержки: висящий вечно спиннер (все три фолбэка в
+// hero.js) был бы враньём.
+.hero-video-loader {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 20px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .2s ease;
+    clip-path: url(#heroClip);
+
+    &.is-loading {
+        opacity: 1;
+        transition-delay: .4s;
+    }
+}
+
+.hero-video-loader-spinner {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 3px solid rgba(251, 241, 226, .45);
+    border-top-color: var(--apricot);
+    animation: hero-video-loader-spin .8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-video-loader-spinner {
+        animation: none;
+    }
+}
+
+@keyframes hero-video-loader-spin {
+    to { transform: rotate(360deg); }
+}
+
 // ==== ниже — из css/mockup.css: варианты заголовка hero (design-review, ====
 // на боевых страницах не используется)
 .headline-options {
