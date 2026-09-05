@@ -41,7 +41,7 @@
 
     .hero {
         grid-template-columns: 620px 1fr;
-        min-height: 520px;
+        min-height: 580px; // Task 16: 520 -> 580, вместе с базовым 560 -> 620
     }
 }
 

@@ -80,6 +80,7 @@ export class Catalog {
         const toggleInput = section.querySelector('.autoplay-checkbox');
         const toggleLabel = section.querySelector('.autoplay-toggle');
         const bgLayer = section.querySelector('.explorer-bg');
+        const flavorName = section.querySelector('.flavor-name');
         const frontFrame = section.querySelector('.flavor-frame');
         const frontImg = frontFrame ? frontFrame.querySelector('img') : null;
         const n = flavors.length;
@@ -163,6 +164,7 @@ export class Catalog {
             center(current, !(opts && opts.silent));
             const f = currentFlavor();
             renderFront(f);
+            if (flavorName) flavorName.textContent = f.name;
             if (announce) announce.textContent = f.name;
         }
 

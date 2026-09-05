@@ -24,7 +24,13 @@
     display: grid;
     grid-template-columns: 780px 1fr;
     align-items: stretch;
-    min-height: 560px;
+    // Task 16: 560 -> 620 — hero был низковат, поднято вместе с заменой
+    // видео на 720p (adaptive/hero.scss держит 580 на 1439). 620, а не
+    // 680: source ровно 1280x720, object-fit: cover при DPR2 на 780x620
+    // уже растягивает кадр в 1.72x по высоте — компромисс между заметной
+    // прибавкой высоты и растяжением, которое не съедает выигрыш от
+    // удвоенного битрейта новых файлов.
+    min-height: 620px;
     overflow: hidden;
 
     .hero-copy {

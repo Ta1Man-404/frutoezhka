@@ -525,10 +525,19 @@
     overflow-y: auto;
     text-align: center;
 
+    // Task 16: h2 больше не крупный заголовок секции — он стал
+    // надзаголовком-эйкбрау (.eyebrow), поэтому берёт только отступ,
+    // а не размер/цвет шрифта. Крупное название вкуса теперь у
+    // .flavor-name — том же дисплейном шрифте, что раньше был у h2.
     h2 {
+        margin-top: 0;
+        margin-bottom: 6px;
+    }
+
+    .flavor-name {
         color: var(--cream);
         font-size: clamp(1.4rem, 2.6vw, 2rem);
-        margin-top: 0;
+        min-height: 1.12em; // держит высоту до первого JS-рендера
     }
 }
 
@@ -536,6 +545,15 @@
     margin-top: 4px;
     font-size: .84rem;
     color: rgba(251, 241, 226, .72);
+}
+
+// Task 16: подпись формата под крупным названием вкуса — статична для
+// секции (не меняется при листании карусели, в отличие от .flavor-name).
+.flavor-format {
+    margin-top: 2px;
+    font-size: .82rem;
+    font-weight: 700;
+    color: rgba(251, 241, 226, .75);
 }
 
 .catalog-photo-note {
@@ -771,7 +789,10 @@
         height: 100%;
         object-fit: contain;
         object-position: center;
-        padding: 8%;
+        // Task 16: было 8% — рамка заметно превышала само фото упаковки;
+        // вдвое уже поджимает именно этот управляемый отступ (внутреннее
+        // поле фото на снимках и так есть, оно не трогается).
+        padding: 4%;
     }
 }
 
